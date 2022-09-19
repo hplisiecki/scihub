@@ -7,50 +7,6 @@ browser = mechanize.Browser()
 browser.set_handle_robots(False)
 browser.addheaders = [('User-agent', 'Firefox')]
 # import excel file in utf-8
-articles = pd.read_excel('Corrected.ScienceStatus.18.9.xlsx')
-
-# drop duplicates
-articles_unique = articles.drop_duplicates(subset=['article.id'])
-
-
-
-journals = ['Journal of personality and social psychology', 'Journal of Personality and Social Psychology', 'Journal of personality and Social Psychology', 'Psychological science', 'Psychological Science', 'Personality and Social Psychology Bulletin','Personality and social psychology bulletin' , 'Personality and social psychology Bulletin', "Journal of experimental social psychology", "Journal of Experimental Social Psychology"]
-
-# drop nans from article_unique['citation']
-articles_unique = articles_unique.dropna(subset=['citation'])
-titles = []
-for text in articles_unique['citation']:
-    pres = False
-    for i in journals:
-        if i in text:
-            pres = True
-            # find text before "i"
-            a = re.findall(fr'\).*?{i}', text)
-            a = a[0].split('.')
-            a.pop()
-            a.pop(0)
-            a = ' '.join(a)
-            a = a.lstrip().rstrip() + '.'
-            titles.append(a)
-    if pres == False:
-        # count in text
-        if text.count('(') == 1:
-            a = text.split(').')
-            a = a[1]
-            a = a.lstrip().rstrip()
-            titles.append(a)
-        elif text.count('(') == 2:
-            # find text after ').' and before '('
-            a = re.findall(r'\).*?\(', text)[0]
-            a.replace(').', '')
-            a = a.split('.')
-            a = a[1]
-            a = a.replace('(', '')
-            a = a.lstrip().rstrip()
-            a = a + '.'
-            titles.append(a)
-
-
 
 
 from selenium import webdriver
